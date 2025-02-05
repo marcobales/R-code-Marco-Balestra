@@ -1,0 +1,372 @@
+---
+title: "Master thesis"
+author: "Marco Balestra"
+date: "2025-01-21"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+
+Datasets Preparation
+
+```{r datasets}
+PremierLeague<-read.csv("PremierLeague.csv",sep=";")
+Bundesliga<-read.csv("Bundesliga.csv",sep=";")
+SerieA<-read.csv("SerieA.csv",sep=";")
+LaLiga<-read.csv("LaLiga.csv",sep=";")
+Ligue1<-read.csv("Ligue1.csv",sep=";")
+Top5<-rbind(PremierLeague,Bundesliga,SerieA,LaLiga,Ligue1)
+Top5_From19.20<-read.csv("FullDataSet_From19:20.csv",sep=";")
+Bundesliga_From19.20<-read.csv("Bundesliga_From19:20.csv",sep=";")
+PremierLeague_From19.20<-read.csv("PremierLeague_From19:20.csv",sep=";")
+SerieA_From19.20<-read.csv("SerieA_From19:20.csv",sep=";")
+LaLiga_From19.20<-read.csv("LaLiga_From19:20.csv",sep=";")
+Ligue1_From20.21<-read.csv("Ligue1_From20:21.csv",sep=";")
+Top5_Championsonly<-subset(Top5, Champion==1)
+```
+
+Top 5
+
+Let-down, points
+
+```{r a}
+MeanPTS_CA_Top5 <- mean(subset(Top5, Champion==1 & ChampionshipAchieved==1)$Points,na.rm = T)
+MeanPTS_CB_Top5 <- mean(subset(Top5, Champion==1 & ChampionshipAchieved==0)$Points,na.rm = T)                       
+MeanPTS_CD_Top5 <- MeanPTS_CA_Top5-MeanPTS_CB_Top5
+
+MeanPTS_NCA_Top5 <- mean(subset(Top5, Champion==0 & ChampionshipAchieved==1)$Points,na.rm = T)
+MeanPTS_NCB_Top5 <- mean(subset(Top5, Champion==0 & ChampionshipAchieved==0)$Points,na.rm = T) 
+MeanPTS_NCD_Top5 <- MeanPTS_NCA_Top5-MeanPTS_NCB_Top5 
+```
+
+
+Let-down, goals
+
+```{r b}
+MeanGD_CA_Top5 <- mean(subset(Top5, Champion==1 & ChampionshipAchieved==1)$GoalDiff,na.rm = T)
+MeanGD_CB_Top5 <- mean(subset(Top5, Champion==1 & ChampionshipAchieved==0)$GoalDiff,na.rm = T)
+MeanGD_CD_Top5 <- MeanGD_CA_Top5-MeanGD_CB_Top5 
+
+MeanGD_NCA_Top5 <- mean(subset(Top5, Champion==0 & ChampionshipAchieved==1)$GoalDiff,na.rm = T)
+MeanGD_NCB_Top5 <- mean(subset(Top5, Champion==0 & ChampionshipAchieved==0)$GoalDiff,na.rm = T)
+MeanGD_NCD_Top5 <- MeanGD_NCA_Top5-MeanGD_NCB_Top5 
+```
+
+H1
+
+```{r c}
+summary(lm(data=Top5, Win~B365WinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=Top5, Win~AvgWinProb+Champion*ChampionshipAchieved))
+summary(lm(data=Top5, Win~B365CWinProb+Champion*ChampionshipAchieved))
+
+summary(lm(data=Top5, Win~B365WinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=Top5, Win~AvgWinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=Top5, Win~B365CWinProb+Champion*ChampionshipAchieved*Home))
+
+summary(lm(data=Top5_From19.20, Win~B365WinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=Top5_From19.20, Win~AvgWinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=Top5_From19.20, Win~B365CWinProb+Champion*ChampionshipAchieved))
+
+summary(lm(data=Top5_From19.20, Win~B365WinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=Top5_From19.20, Win~AvgWinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=Top5_From19.20, Win~B365CWinProb+Champion*ChampionshipAchieved*Home))
+```
+
+H2
+
+```{r d}
+summary(lm(data=Top5, Win~B365WinProb+Champion*ChampionshipAchieved*Days))
+summary(lm(data=Top5, Win~AvgWinProb+Champion*ChampionshipAchieved*Days))
+```
+
+Bundesliga
+
+Let-down, points
+
+```{r e}
+MeanPTS_CA_Bundesliga <- mean(subset(Bundesliga, Champion==1 & ChampionshipAchieved==1)$Points,na.rm = T)
+MeanPTS_CB_Bundesliga <- mean(subset(Bundesliga, Champion==1 & ChampionshipAchieved==0)$Points,na.rm = T)                       
+MeanPTS_CD_Bundesliga <- MeanPTS_CA_Bundesliga-MeanPTS_CB_Bundesliga 
+
+MeanPTS_NCA_Bundesliga <- mean(subset(Bundesliga, Champion==0 & ChampionshipAchieved==1)$Points,na.rm = T)
+MeanPTS_NCB_Bundesliga <- mean(subset(Bundesliga, Champion==0 & ChampionshipAchieved==0)$Points,na.rm = T)                       
+MeanPTS_NCD_Bundesliga <- MeanPTS_NCA_Bundesliga-MeanPTS_NCB_Bundesliga 
+```
+
+Let-down, goals
+
+```{r f}
+MeanGD_CA_Bundesliga <- mean(subset(Bundesliga, Champion==1 & ChampionshipAchieved==1)$GoalDiff,na.rm = T)
+MeanGD_CB_Bundesliga <- mean(subset(Bundesliga, Champion==1 & ChampionshipAchieved==0)$GoalDiff,na.rm = T)
+MeanGD_CD_Bundesliga <- MeanGD_CA_Bundesliga-MeanGD_CB_Bundesliga 
+
+MeanGD_NCA_Bundesliga <- mean(subset(Bundesliga, Champion==0 & ChampionshipAchieved==1)$GoalDiff,na.rm = T)
+MeanGD_NCB_Bundesliga <- mean(subset(Bundesliga, Champion==0 & ChampionshipAchieved==0)$GoalDiff,na.rm = T)
+MeanGD_NCD_Bundesliga <- MeanGD_NCA_Bundesliga-MeanGD_NCB_Bundesliga 
+```
+
+H1
+
+```{r g}
+summary(lm(data=Bundesliga, Win~B365WinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=Bundesliga, Win~AvgWinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=Bundesliga, Win~B365CWinProb+Champion*ChampionshipAchieved)) 
+
+summary(lm(data=Bundesliga, Win~B365WinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=Bundesliga, Win~AvgWinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=Bundesliga, Win~B365CWinProb+Champion*ChampionshipAchieved*Home)) 
+
+summary(lm(data=Bundesliga_From19.20, Win~B365WinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=Bundesliga_From19.20, Win~AvgWinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=Bundesliga_From19.20, Win~B365CWinProb+Champion*ChampionshipAchieved)) 
+
+summary(lm(data=Bundesliga_From19.20, Win~B365WinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=Bundesliga_From19.20, Win~AvgWinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=Bundesliga_From19.20, Win~B365CWinProb+Champion*ChampionshipAchieved*Home))
+```
+
+H2
+
+```{r h}
+summary(lm(data=Bundesliga, Win~B365WinProb+Champion*ChampionshipAchieved*Days))
+```
+
+Premier League
+
+Let-down, points
+
+```{r i}
+MeanPTS_CA_PremierLeague <- mean(subset(PremierLeague, Champion==1 & ChampionshipAchieved==1)$Points,na.rm = T)
+MeanPTS_CB_PremierLeague <- mean(subset(PremierLeague, Champion==1 & ChampionshipAchieved==0)$Points,na.rm = T)                       
+MeanPTS_CD_PremierLeague <- MeanPTS_CA_PremierLeague-MeanPTS_CB_PremierLeague 
+
+MeanPTS_NCA_PremierLeague <- mean(subset(PremierLeague, Champion==0 & ChampionshipAchieved==1)$Points,na.rm = T)
+MeanPTS_NCB_PremierLeague <- mean(subset(PremierLeague, Champion==0 & ChampionshipAchieved==0)$Points,na.rm = T)                       
+MeanPTS_NCD_PremierLeague <- MeanPTS_NCA_PremierLeague-MeanPTS_NCB_PremierLeague 
+```
+
+Let-down, goals
+
+```{r j}
+MeanGD_CA_PremierLeague <- mean(subset(PremierLeague, Champion==1 & ChampionshipAchieved==1)$GoalDiff,na.rm = T)
+MeanGD_CB_PremierLeague <- mean(subset(PremierLeague, Champion==1 & ChampionshipAchieved==0)$GoalDiff,na.rm = T)
+MeanGD_CD_PremierLeague <- MeanGD_CA_PremierLeague-MeanGD_CB_PremierLeague 
+
+MeanGD_NCA_PremierLeague <- mean(subset(PremierLeague, Champion==0 & ChampionshipAchieved==1)$GoalDiff,na.rm = T)
+MeanGD_NCB_PremierLeague <- mean(subset(PremierLeague, Champion==0 & ChampionshipAchieved==0)$GoalDiff,na.rm = T)
+MeanGD_NCD_PremierLeague <- MeanGD_NCA_PremierLeague-MeanGD_NCB_PremierLeague
+```
+
+H1
+
+```{r k}
+summary(lm(data=PremierLeague, Win~B365WinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=PremierLeague, Win~AvgWinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=PremierLeague, Win~B365CWinProb+Champion*ChampionshipAchieved)) 
+
+summary(lm(data=PremierLeague, Win~B365WinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=PremierLeague, Win~AvgWinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=PremierLeague, Win~B365CWinProb+Champion*ChampionshipAchieved*Home)) 
+
+summary(lm(data=PremierLeague_From19.20, Win~B365WinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=PremierLeague_From19.20, Win~AvgWinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=PremierLeague_From19.20, Win~B365CWinProb+Champion*ChampionshipAchieved)) 
+
+summary(lm(data=PremierLeague_From19.20, Win~B365WinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=PremierLeague_From19.20, Win~AvgWinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=PremierLeague_From19.20, Win~B365CWinProb+Champion*ChampionshipAchieved*Home))
+```
+
+H2 
+
+```{r l}
+summary(lm(data=PremierLeague, Win~B365WinProb+Champion*ChampionshipAchieved*Days))
+```
+
+Serie A
+
+Let-down, points
+
+```{r m}
+MeanPTS_CA_SerieA <- mean(subset(SerieA, Champion==1 & ChampionshipAchieved==1)$Points,na.rm = T)
+MeanPTS_CB_SerieA <- mean(subset(SerieA, Champion==1 & ChampionshipAchieved==0)$Points,na.rm = T)                       
+MeanPTS_CD_SerieA <- MeanPTS_CA_SerieA-MeanPTS_CB_SerieA 
+
+MeanPTS_NCA_SerieA <- mean(subset(SerieA, Champion==0 & ChampionshipAchieved==1)$Points,na.rm = T)
+MeanPTS_NCB_SerieA <- mean(subset(SerieA, Champion==0 & ChampionshipAchieved==0)$Points,na.rm = T)                       
+MeanPTS_NCD_SerieA <- MeanPTS_NCA_SerieA-MeanPTS_NCB_SerieA 
+```
+
+Let-down, goals
+
+```{r n}
+MeanGD_CA_SerieA <- mean(subset(SerieA, Champion==1 & ChampionshipAchieved==1)$GoalDiff,na.rm = T)
+MeanGD_CB_SerieA <- mean(subset(SerieA, Champion==1 & ChampionshipAchieved==0)$GoalDiff,na.rm = T)
+MeanGD_CD_SerieA <- MeanGD_CA_SerieA-MeanGD_CB_SerieA 
+
+MeanGD_NCA_SerieA <- mean(subset(SerieA, Champion==0 & ChampionshipAchieved==1)$GoalDiff,na.rm = T)
+MeanGD_NCB_SerieA <- mean(subset(SerieA, Champion==0 & ChampionshipAchieved==0)$GoalDiff,na.rm = T)
+MeanGD_NCD_SerieA <- MeanGD_NCA_SerieA-MeanGD_NCB_SerieA 
+```
+
+H1
+
+```{r o}
+summary(lm(data=SerieA, Win~B365WinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=SerieA, Win~AvgWinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=SerieA, Win~B365CWinProb+Champion*ChampionshipAchieved)) 
+
+summary(lm(data=SerieA, Win~B365WinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=SerieA, Win~AvgWinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=SerieA, Win~B365CWinProb+Champion*ChampionshipAchieved*Home)) 
+
+summary(lm(data=SerieA_From19.20, Win~B365WinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=SerieA_From19.20, Win~AvgWinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=SerieA_From19.20, Win~B365CWinProb+Champion*ChampionshipAchieved)) 
+
+summary(lm(data=SerieA_From19.20, Win~B365WinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=SerieA_From19.20, Win~AvgWinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=SerieA_From19.20, Win~B365CWinProb+Champion*ChampionshipAchieved*Home))
+```
+
+H2
+
+```{r p}
+summary(lm(data=SerieA, Win~B365WinProb+Champion*ChampionshipAchieved*Days))
+```
+
+LaLiga
+
+Let-down, points
+
+```{r q}
+MeanPTS_CA_LaLiga <- mean(subset(LaLiga, Champion==1 & ChampionshipAchieved==1)$Points,na.rm = T)
+MeanPTS_CB_LaLiga <- mean(subset(LaLiga, Champion==1 & ChampionshipAchieved==0)$Points,na.rm = T)                       
+MeanPTS_CD_LaLiga <- MeanPTS_CA_LaLiga-MeanPTS_CB_LaLiga 
+
+MeanPTS_NCA_LaLiga <- mean(subset(LaLiga, Champion==0 & ChampionshipAchieved==1)$Points,na.rm = T)
+MeanPTS_NCB_LaLiga <- mean(subset(LaLiga, Champion==0 & ChampionshipAchieved==0)$Points,na.rm = T)                       
+MeanPTS_NCD_LaLiga <- MeanPTS_NCA_LaLiga-MeanPTS_NCB_LaLiga 
+```
+
+Let-down, goals
+
+```{r r}
+MeanGD_CA_LaLiga <- mean(subset(LaLiga, Champion==1 & ChampionshipAchieved==1)$GoalDiff,na.rm = T)
+MeanGD_CB_LaLiga <- mean(subset(LaLiga, Champion==1 & ChampionshipAchieved==0)$GoalDiff,na.rm = T)
+MeanGD_CD_LaLiga <- MeanGD_CA_LaLiga-MeanGD_CB_LaLiga 
+
+MeanGD_NCA_LaLiga <- mean(subset(LaLiga, Champion==0 & ChampionshipAchieved==1)$GoalDiff,na.rm = T)
+MeanGD_NCB_LaLiga <- mean(subset(LaLiga, Champion==0 & ChampionshipAchieved==0)$GoalDiff,na.rm = T)
+MeanGD_NCD_LaLiga <- MeanGD_NCA_LaLiga-MeanGD_NCB_LaLiga
+```
+
+H1
+
+```{r s}
+summary(lm(data=LaLiga, Win~B365WinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=LaLiga, Win~AvgWinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=LaLiga, Win~B365CWinProb+Champion*ChampionshipAchieved)) 
+
+summary(lm(data=LaLiga, Win~B365WinProb+Champion*ChampionshipAchieved*Home))
+summary(lm(data=LaLiga, Win~AvgWinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=LaLiga, Win~B365CWinProb+Champion*ChampionshipAchieved*Home))
+
+summary(lm(data=LaLiga_From19.20, Win~B365WinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=LaLiga_From19.20, Win~AvgWinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=LaLiga_From19.20, Win~B365CWinProb+Champion*ChampionshipAchieved)) 
+
+summary(lm(data=LaLiga_From19.20, Win~B365WinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=LaLiga_From19.20, Win~AvgWinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=LaLiga_From19.20, Win~B365CWinProb+Champion*ChampionshipAchieved*Home)) 
+```
+
+H2
+
+```{r t}
+summary(lm(data=LaLiga, Win~B365WinProb+Champion*ChampionshipAchieved*Days))
+```
+
+Ligue 1
+
+Let-down, points
+
+```{r u}
+MeanPTS_CA_Ligue1 <- mean(subset(Ligue1, Champion==1 & ChampionshipAchieved==1)$Points,na.rm = T)
+MeanPTS_CB_Ligue1 <- mean(subset(Ligue1, Champion==1 & ChampionshipAchieved==0)$Points,na.rm = T)                       
+MeanPTS_CD_Ligue1 <- MeanPTS_CA_Ligue1-MeanPTS_CB_Ligue1 
+
+MeanPTS_NCA_Ligue1 <- mean(subset(Ligue1, Champion==0 & ChampionshipAchieved==1)$Points,na.rm = T)
+MeanPTS_NCB_Ligue1 <- mean(subset(Ligue1, Champion==0 & ChampionshipAchieved==0)$Points,na.rm = T)                       
+MeanPTS_NCD_Ligue1 <- MeanPTS_NCA_Ligue1-MeanPTS_NCB_Ligue1 
+```
+
+Let-down, goals
+
+```{r v}
+MeanGD_CA_Ligue1 <- mean(subset(Ligue1, Champion==1 & ChampionshipAchieved==1)$GoalDiff,na.rm = T)
+MeanGD_CB_Ligue1 <- mean(subset(Ligue1, Champion==1 & ChampionshipAchieved==0)$GoalDiff,na.rm = T)
+MeanGD_CD_Ligue1 <- MeanGD_CA_Ligue1-MeanGD_CB_Ligue1 
+
+MeanGD_NCA_Ligue1 <- mean(subset(Ligue1, Champion==0 & ChampionshipAchieved==1)$GoalDiff,na.rm = T)
+MeanGD_NCB_Ligue1 <- mean(subset(Ligue1, Champion==0 & ChampionshipAchieved==0)$GoalDiff,na.rm = T)
+MeanGD_NCD_Ligue1 <- MeanGD_NCA_Ligue1-MeanGD_NCB_Ligue1 
+```
+
+H1
+
+```{r w}
+summary(lm(data=Ligue1, Win~B365WinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=Ligue1, Win~AvgWinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=Ligue1, Win~B365CWinProb+Champion*ChampionshipAchieved))
+
+summary(lm(data=Ligue1, Win~B365WinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=Ligue1, Win~AvgWinProb+Champion*ChampionshipAchieved*Home)) 
+summary(lm(data=Ligue1, Win~B365CWinProb+Champion*ChampionshipAchieved*Home)) 
+
+summary(lm(data=Ligue1_From20.21, Win~B365WinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=Ligue1_From20.21, Win~AvgWinProb+Champion*ChampionshipAchieved)) 
+summary(lm(data=Ligue1_From20.21, Win~B365CWinProb+Champion*ChampionshipAchieved)) 
+
+summary(lm(data=LaLiga_From19.20, Win~B365WinProb+Champion*ChampionshipAchieved*Home))
+summary(lm(data=LaLiga_From19.20, Win~AvgWinProb+Champion*ChampionshipAchieved*Home))
+summary(lm(data=LaLiga_From19.20, Win~B365CWinProb+Champion*ChampionshipAchieved*Home))
+```
+
+H2 
+
+```{r x}
+summary(lm(data=Ligue1, Win~B365WinProb+Champion*ChampionshipAchieved*Days))
+```
+
+Strategy
+
+```{r 222}
+#Strategy
+strat <- read.csv("Thesis_Data.csv", sep=";")
+stratchamp <- subset(strat, AchievedGoal==1)
+
+#Ligue1
+Ligue1strat <- subset(stratchamp, League=="Ligue 1")
+sum(Ligue1strat$X) 
+
+#Prem
+Premstrat <- subset(stratchamp, League=="Premier League")
+sum(Premstrat$X) 
+
+#Serie A
+SerieAstrat <- subset(stratchamp, League=="Serie A")
+sum(SerieAstrat$X) 
+
+#LaLiga
+LaLigastrat<- subset(stratchamp, League=="LaLiga")
+sum(LaLigastrat$X) 
+
+#Bundesliga 
+BUndestrats <- subset(stratchamp, League=="Bundesliga")
+sum(BUndestrats$X) 
+```
+
+
+
